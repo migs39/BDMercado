@@ -1,312 +1,487 @@
 import psycopg2
+from tkinter import messagebox
+
+# funcs.py
+
+import psycopg2
 
 def conectar_banco():
     # Conectar ao banco de dados
     try:
         conn = psycopg2.connect(
-            dbname="nome_do_banco", 
-            user="nome_do_usuario", 
-            password="senha_do_usuario", 
+            dbname="db_Trabalho_BD", 
+            user="postgres", 
+            password="3121", 
             host="localhost",  # ou o endereço IP do seu servidor PostgreSQL
             port="5432"        # porta padrão do PostgreSQL
         )
-        print("Conexão bem-sucedida!")
         return conn
     except psycopg2.Error as e:
         print("Erro ao conectar ao banco de dados:", e)
         return None
 
-# Funções para cadastrar
-def cadastrar_fornecedor():
-    print("Cadastrar fornecedor")
+# Função para cadastrar fornecedor
+def cadastrar_fornecedor(cnpj, nome_fornecedor, telefone, email):
     conn = conectar_banco()
     if conn:
         cursor = conn.cursor()
-
-        # Solicitar os valores ao usuário
-        cnpj = input("Digite o CNPJ do fornecedor: ")
-        nome_fornecedor = input("Digite o nome do fornecedor: ")
-        telefone = input("Digite o telefone do fornecedor: ")
-        email = input("Digite o email do fornecedor: ")
-
-        # Inserir os valores na tabela de fornecedores
         cursor.execute("INSERT INTO fornecedores (cnpj, nome_fornecedor, telefone, email) VALUES (%s, %s, %s, %s)", (cnpj, nome_fornecedor, telefone, email))
-
         conn.commit()
         conn.close()
 
-def cadastrar_mercado():
-    print("Cadastrar mercado")
+# Função para cadastrar mercado
+def cadastrar_mercado(cnpj, nome_estabelecimento, telefone):
     conn = conectar_banco()
     if conn:
         cursor = conn.cursor()
-
-        # Solicitar os valores ao usuário
-        cnpj = input("Digite o CNPJ do mercado: ")
-        nome_estabelecimento = input("Digite o nome do estabelecimento: ")
-        telefone = input("Digite o telefone do mercado: ")
-
-        # Inserir os valores na tabela de mercado
         cursor.execute("INSERT INTO mercado (cnpj, nome_estabelecimento, telefone) VALUES (%s, %s, %s)", (cnpj, nome_estabelecimento, telefone))
-
         conn.commit()
         conn.close()
-        
-def cadastrar_pedido():
-    print("Cadastrar pedido")
+
+# Função para cadastrar pedido
+def cadastrar_pedido(id_pedido, id_produto, cnpj_mercado, cpf_cliente, quantidade_produto, subtotal):
     conn = conectar_banco()
     if conn:
         cursor = conn.cursor()
-
-        # Solicitar os valores ao usuário
-        id_pedido = input("Digite o ID do pedido: ")
-        id_produto = input("Digite o ID do produto: ")
-        cnpj_mercado = input("Digite o CNPJ do mercado: ")
-        cpf_cliente = input("Digite o CPF do cliente: ")
-        quantidade_produto = input("Digite a quantidade do produto: ")
-        subtotal = input("Digite o subtotal: ")
-
-        # Inserir os valores na tabela de pedido
         cursor.execute("INSERT INTO pedido (id_pedido, id_produto, cnpj_mercado, cpf_cliente, quantidade_produto, subtotal) VALUES (%s, %s, %s, %s, %s, %s)", (id_pedido, id_produto, cnpj_mercado, cpf_cliente, quantidade_produto, subtotal))
-
         conn.commit()
         conn.close()
-        
-def cadastrar_nota():
-    print("Cadastrar nota")
+
+# Função para cadastrar nota
+def cadastrar_nota(id_pedido, cpf_cliente, data_pedido, id_endereco, preco_total, forma_pagamento, status_pedido):
     conn = conectar_banco()
     if conn:
         cursor = conn.cursor()
-
-        # Solicitar os valores ao usuário
-        id_pedido = input("Digite o ID do pedido: ")
-        cpf_cliente = input("Digite o CPF do cliente: ")
-        data_pedido = input("Digite a data do pedido: ")
-        id_endereco = input("Digite o ID do endereço: ")
-        preco_total = input("Digite o preço total: ")
-        forma_pagamento = input("Digite a forma de pagamento: ")
-        status_pedido = input("Digite o status do pedido: ")
-
-        # Inserir os valores na tabela de nota
         cursor.execute("INSERT INTO nota (id_pedido, cpf_cliente, data_pedido, id_endereco, preco_total, forma_pagamento, status_pedido) VALUES (%s, %s, %s, %s, %s, %s, %s)", (id_pedido, cpf_cliente, data_pedido, id_endereco, preco_total, forma_pagamento, status_pedido))
-
         conn.commit()
         conn.close()
-        
-def cadastrar_endereco():
-    print("Cadastrar endereço")
+
+# Função para cadastrar endereço
+def cadastrar_endereco(id_endereco, cnpj_cpf_residente, cep, logradouro, numero, complemento):
     conn = conectar_banco()
     if conn:
         cursor = conn.cursor()
-
-        # Solicitar os valores ao usuário
-        id_endereco = input("Digite o ID do endereço: ")
-        cnpj_cpf_residente = input("Digite o CNPJ ou CPF do residente: ")
-        cep = input("Digite o CEP: ")
-        logradouro = input("Digite o logradouro: ")
-        numero = input("Digite o número: ")
-        complemento = input("Digite o complemento (opcional): ")
-
-        # Inserir os valores na tabela de endereço
         cursor.execute("INSERT INTO enderecos (id_endereco, cnpj_cpf_residente, cep, logradouro, numero, complemento) VALUES (%s, %s, %s, %s, %s, %s)", (id_endereco, cnpj_cpf_residente, cep, logradouro, numero, complemento))
-
         conn.commit()
         conn.close()
-        
-def cadastrar_produto():
-    print("Cadastrar produto")
+
+# Função para cadastrar produto
+def cadastrar_produto(id_produto, cnpj_fornecedor, descricao, categoria, preco):
     conn = conectar_banco()
     if conn:
         cursor = conn.cursor()
-
-        # Solicitar os valores ao usuário
-        id_produto = input("Digite o ID do produto: ")
-        cnpj_fornecedor = input("Digite o CNPJ do fornecedor: ")
-        descricao = input("Digite a descrição do produto: ")
-        categoria = input("Digite a categoria do produto: ")
-        preco = input("Digite o preço do produto: ")
-
-        # Inserir os valores na tabela de produto
         cursor.execute("INSERT INTO produtos (id_produto, cnpj_fornecedor, descricao, categoria, preco) VALUES (%s, %s, %s, %s, %s)", (id_produto, cnpj_fornecedor, descricao, categoria, preco))
-
         conn.commit()
         conn.close()
-        
-def cadastrar_cliente():
-    print("Cadastrar cliente")
+
+# Função para cadastrar cliente
+def cadastrar_cliente(cpf, nome_cliente, telefone, email, data_cadastro):
     conn = conectar_banco()
     if conn:
         cursor = conn.cursor()
-
-        # Solicitar os valores ao usuário
-        cpf = input("Digite o CPF do cliente: ")
-        nome_cliente = input("Digite o nome do cliente: ")
-        telefone = input("Digite o telefone do cliente: ")
-        email = input("Digite o email do cliente: ")
-        data_cadastro = input("Digite a data de cadastro do cliente: ")
-
-        # Inserir os valores na tabela de cliente
         cursor.execute("INSERT INTO tabela_de_clientes (cpf, nome_cliente, telefone, email, data_cadastro) VALUES (%s, %s, %s, %s, %s)", (cpf, nome_cliente, telefone, email, data_cadastro))
-
         conn.commit()
         conn.close()
-        
-def cadastrar_lote():
-    print("Cadastrar lote")
+
+# Função para cadastrar lote
+def cadastrar_lote(id_lote, cnpj_unidade, id_produto, quantidade_estoque, data_validade, data_atualizacao):
     conn = conectar_banco()
     if conn:
         cursor = conn.cursor()
-
-        # Solicitar os valores ao usuário
-        id_lote = input("Digite o ID do lote: ")
-        cnpj_unidade = input("Digite o CNPJ da unidade: ")
-        id_produto = input("Digite o ID do produto: ")
-        quantidade_estoque = input("Digite a quantidade em estoque: ")
-        data_validade = input("Digite a data de validade: ")
-        data_atualizacao = input("Digite a data de atualização: ")
-
-        # Inserir os valores na tabela de lote
         cursor.execute("INSERT INTO controle_de_estoque (id_lote, cnpj_unidade, id_produto, quantidade_estoque, data_validade, data_atualizacao) VALUES (%s, %s, %s, %s, %s, %s)", (id_lote, cnpj_unidade, id_produto, quantidade_estoque, data_validade, data_atualizacao))
-
         conn.commit()
         conn.close()
+
+# Função para conferir fornecedor
+# def conferir_fornecedor(cnpj):
+#     conn = conectar_banco()
+#     if conn:
+#         cursor = conn.cursor()
+#         cursor.execute("SELECT * FROM fornecedores WHERE cnpj = %s", (cnpj,))
+#         fornecedor = cursor.fetchone()
+#         conn.close()
+#         return fornecedor
+
+def conferir_fornecedor(cnpj):
+    conn = conectar_banco()
+    if conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM fornecedores WHERE cnpj = %s", (cnpj,))
+        fornecedor = cursor.fetchone()
+        conn.close()
         
+        if fornecedor:
+            column_names = [col[0] for col in cursor.description]
+            fornecedor_dict = {column_names[i]: fornecedor[i] for i in range(len(column_names))}
+            return fornecedor_dict
+        else:
+            return None
+
+
+# Função para conferir mercado
+def conferir_mercado(cnpj):
+    conn = conectar_banco()
+    if conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM mercado WHERE cnpj = %s", (cnpj,))
+        mercado = cursor.fetchone()
+        conn.close()
+    
+        if mercado:
+            column_names = [col[0] for col in cursor.description]
+            mercado_dict = {column_names[i]: mercado[i] for i in range(len(column_names))}
+            return mercado_dict
+        else:
+            return None
+
+# Função para conferir pedido
+def conferir_pedido(id_pedido, id_produto):
+    conn = conectar_banco()
+    if conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM pedido WHERE id_pedido = %s AND id_produto = %s", (id_pedido, id_produto))
+        pedido = cursor.fetchone()
+        conn.close()
+    
+        if pedido:
+            column_names = [col[0] for col in cursor.description]
+            pedido_dict = {column_names[i]: pedido[i] for i in range(len(column_names))}
+            return pedido_dict
+        else:
+            return None
+
+# Função para conferir nota
+def conferir_nota(id_pedido):
+    conn = conectar_banco()
+    if conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM nota WHERE id_pedido = %s", (id_pedido,))
+        nota = cursor.fetchone()
+        conn.close()
+        if nota:
+            column_names = [col[0] for col in cursor.description]
+            nota_dict = {column_names[i]: nota[i] for i in range(len(column_names))}
+            return nota_dict
+        else:
+            return None
+
+# Função para conferir endereço
+def conferir_endereco(id_endereco):
+    conn = conectar_banco()
+    if conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM enderecos WHERE id_endereco = %s", (id_endereco,))
+        endereco = cursor.fetchone()
+        conn.close()
+        if endereco:
+            column_names = [col[0] for col in cursor.description]
+            endereco_dict = {column_names[i]: endereco[i] for i in range(len(column_names))}
+            return endereco_dict
+        else:
+            return None
+
+# Função para conferir produto
+def conferir_produto(id_produto):
+    conn = conectar_banco()
+    if conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM produtos WHERE id_produto = %s", (id_produto,))
+        produto = cursor.fetchone()
+        conn.close()
+        if produto:
+            column_names = [col[0] for col in cursor.description]
+            produto_dict = {column_names[i]: produto[i] for i in range(len(column_names))}
+            return produto_dict
+        else:
+            return None
+
+# Função para conferir cliente
+def conferir_cliente(cpf):
+    conn = conectar_banco()
+    if conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM tabela_de_clientes WHERE cpf = %s", (cpf,))
+        cliente = cursor.fetchone()
+        conn.close()
+        if cliente:
+            column_names = [col[0] for col in cursor.description]
+            cliente_dict = {column_names[i]: cliente[i] for i in range(len(column_names))}
+            return cliente_dict
+        else:
+            return None
+
+# Função para conferir lote
+def conferir_lote(id_lote):
+    conn = conectar_banco()
+    if conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM controle_de_estoque WHERE id_lote = %s", (id_lote,))
+        lote = cursor.fetchone()
+        conn.close()
+        if lote:
+            column_names = [col[0] for col in cursor.description]
+            lote_dict = {column_names[i]: lote[i] for i in range(len(column_names))}
+            return lote_dict
+        else:
+            return None
+
+# Função para conferir fun
+def conferir_funcionarios(id_funcionarios):
+    conn = conectar_banco()
+    if conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM controle_de_estoque WHERE id_lote = %s", (id_funcionarios,))
+        funcionario = cursor.fetchone()
+        conn.close()
+        if funcionario:
+            column_names = [col[0] for col in cursor.description]
+            funcionario_dict = {column_names[i]: funcionario[i] for i in range(len(column_names))}
+            return funcionario_dict
+        else:
+            return None
+
+
+
+            
+# Funções para remove
+# def remover_fornecedor():
+#     print("Remover fornecedor")
+#     conn = conectar_banco()
+#     if conn:
+#         cursor = conn.cursor()
+#         cnpj = input("Digite o cnpj do fornecedor a ser removido:")
+#         try:
+#             cursor.execute("DELETE FROM fornecedores WHERE cnpj = %s", (cnpj,))
+#             conn.commit()
+#             print("Fornecedor removido com sucesso!")
+#         except psycopg2.Error as e:
+#             print("Erro ao remover fornecedor:", e)
+#         finally:
+#             conn.close()
+
+# def remover_mercado():
+#     print("Remover mercado")
+#     conn = conectar_banco()
+#     if conn:
+#         cnpj = input("Digite o cnpj do mercado a ser removido:")
+#         cursor = conn.cursor()
+#         try:
+#             cursor.execute("DELETE FROM mercado WHERE cnpj = %s", (cnpj,))
+#             conn.commit()
+#             print("Mercado removido com sucesso!")
+#         except psycopg2.Error as e:
+#             print("Erro ao remover mercado:", e)
+#         finally:
+#             conn.close()
+
+# def remover_pedido():
+#     print("Remover pedido")
+#     conn = conectar_banco()
+#     if conn:
+#         id_pedido = input("Digite o id_pedido do pedido a ser removido:")
+#         cursor = conn.cursor()
+#         try:
+#             cursor.execute("DELETE FROM pedido WHERE id_pedido = %s", (id_pedido,))
+#             conn.commit()
+#             print("Pedido removido com sucesso!")
+#         except psycopg2.Error as e:
+#             print("Erro ao remover pedido:", e)
+#         finally:
+#             conn.close()
+
+# def remover_nota():
+#     print("Remover nota")
+#     conn = conectar_banco()
+#     if conn:
+#         id_pedido = input("Digite o id_pedido da nota a ser removido:")
+#         cursor = conn.cursor()
+#         try:
+#             cursor.execute("DELETE FROM nota WHERE id_pedido = %s", (id_pedido,))
+#             conn.commit()
+#             print("Nota removida com sucesso!")
+#         except psycopg2.Error as e:
+#             print("Erro ao remover nota:", e)
+#         finally:
+#             conn.close()
+
+def remover_nota(id_nota):
+    conn = conectar_banco()
+    if conn:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM notas WHERE id = %s", (id_nota,))
+        conn.commit()  # Confirma a operação no banco de dados
+        conn.close()
+        messagebox.showinfo("Sucesso", "Nota removida com sucesso.")
+
+        # opcional: se deseja tratar o caso onde nenhum registro foi deletado
+        if cursor.rowcount == 0:
+            messagebox.showinfo("Aviso", "Nenhuma nota encontrada com este ID.")
         
-# Funções para conferir
-def conferir_fornecedor():
-    print("Conferir fornecedor")
+def remover_endereco(id_endereco):
     conn = conectar_banco()
     if conn:
         cursor = conn.cursor()
-
-        cursor.execute("SELECT * FROM fornecedores")
-        fornecedores = cursor.fetchall()
-        for fornecedor in fornecedores:
-            print("CNPJ:", fornecedor[0])
-            print("Nome do Fornecedor:", fornecedor[1])
-            print("Telefone:", fornecedor[2])
-            print("Email:", fornecedor[3])
-
+        cursor.execute("DELETE FROM Enderecos WHERE id_endereco = %s", (id_endereco,))
+        conn.commit()  # Confirma a operação no banco de dados
         conn.close()
+        messagebox.showinfo("Sucesso", "Endereço removido com sucesso.")
 
-def conferir_mercado():
-    print("Conferir mercado")
+        # Opcional: tratar o caso onde nenhum registro foi deletado
+        if cursor.rowcount == 0:
+            messagebox.showinfo("Aviso", "Nenhum endereço encontrado com este ID.")
+
+def remover_fornecedor(cnpj):
     conn = conectar_banco()
     if conn:
         cursor = conn.cursor()
-
-        cursor.execute("SELECT * FROM mercado")
-        mercados = cursor.fetchall()
-        for mercado in mercados:
-            print("CNPJ:", mercado[0])
-            print("Nome do Estabelecimento:", mercado[1])
-            print("Telefone:", mercado[2])
-
+        cursor.execute("DELETE FROM Fornecedores WHERE cnpj = %s", (cnpj,))
+        conn.commit()  # Confirma a operação no banco de dados
         conn.close()
+        messagebox.showinfo("Sucesso", "Fornecedor removido com sucesso.")
 
-def conferir_pedido():
-    print("Conferir pedido")
+        # Opcional: tratar o caso onde nenhum registro foi deletado
+        if cursor.rowcount == 0:
+            messagebox.showinfo("Aviso", "Nenhum fornecedor encontrado com este CNPJ.")
+
+def remover_mercado(cnpj):
     conn = conectar_banco()
     if conn:
         cursor = conn.cursor()
-
-        cursor.execute("SELECT * FROM pedido")
-        pedidos = cursor.fetchall()
-        for pedido in pedidos:
-            print("ID do Pedido:", pedido[0])
-            print("ID do Produto:", pedido[1])
-            print("CNPJ do Mercado:", pedido[2])
-            print("CPF do Cliente:", pedido[3])
-            print("Quantidade do Produto:", pedido[4])
-            print("Subtotal:", pedido[5])
-
+        cursor.execute("DELETE FROM Mercado WHERE cnpj = %s", (cnpj,))
+        conn.commit()  # Confirma a operação no banco de dados
         conn.close()
+        messagebox.showinfo("Sucesso", "Mercado removido com sucesso.")
 
-def conferir_nota():
-    print("Conferir nota")
+        # Opcional: tratar o caso onde nenhum registro foi deletado
+        if cursor.rowcount == 0:
+            messagebox.showinfo("Aviso", "Nenhum mercado encontrado com este CNPJ.")
+
+def remover_pedido(id_pedido):
     conn = conectar_banco()
     if conn:
         cursor = conn.cursor()
-
-        cursor.execute("SELECT * FROM nota")
-        notas = cursor.fetchall()
-        for nota in notas:
-            print("ID do Pedido:", nota[0])
-            print("CPF do Cliente:", nota[1])
-            print("Data do Pedido:", nota[2])
-            print("ID do Endereço:", nota[3])
-            print("Preço Total:", nota[4])
-            print("Forma de Pagamento:", nota[5])
-            print("Status do Pedido:", nota[6])
-
+        cursor.execute("DELETE FROM Pedido WHERE id_pedido = %s", (id_pedido,))
+        conn.commit()  # Confirma a operação no banco de dados
         conn.close()
+        messagebox.showinfo("Sucesso", "Pedido removido com sucesso.")
 
-def conferir_endereco():
-    print("Conferir endereço")
+        # Opcional: tratar o caso onde nenhum registro foi deletado
+        if cursor.rowcount == 0:
+            messagebox.showinfo("Aviso", "Nenhum pedido encontrado com este ID.")
+
+def remover_cliente(cpf):
     conn = conectar_banco()
     if conn:
         cursor = conn.cursor()
-
-        cursor.execute("SELECT * FROM enderecos")
-        enderecos = cursor.fetchall()
-        for endereco in enderecos:
-            print("ID do Endereço:", endereco[0])
-            print("CPF/CNPJ do Residente:", endereco[1])
-            print("CEP:", endereco[2])
-            print("Logradouro:", endereco[3])
-            print("Número:", endereco[4])
-            print("Complemento:", endereco[5])
-
+        cursor.execute("DELETE FROM Tabela_de_clientes WHERE cpf = %s", (cpf,))
+        conn.commit()  # Confirma a operação no banco de dados
         conn.close()
+        messagebox.showinfo("Sucesso", "Cliente removido com sucesso.")
 
-def conferir_produto():
-    print("Conferir produto")
+        # Opcional: tratar o caso onde nenhum registro foi deletado
+        if cursor.rowcount == 0:
+            messagebox.showinfo("Aviso", "Nenhum cliente encontrado com este CPF.")
+
+def remover_funcionario(cpf):
     conn = conectar_banco()
     if conn:
         cursor = conn.cursor()
-
-        cursor.execute("SELECT * FROM produtos")
-        produtos = cursor.fetchall()
-        for produto in produtos:
-            print("ID do Produto:", produto[0])
-            print("CNPJ do Fornecedor:", produto[1])
-            print("Descrição:", produto[2])
-            print("Categoria:", produto[3])
-            print("Preço:", produto[4])
-
+        cursor.execute("DELETE FROM Controle_do_Quadro_de_Funcionários WHERE cpf = %s", (cpf,))
+        conn.commit()  # Confirma a operação no banco de dados
         conn.close()
+        messagebox.showinfo("Sucesso", "Funcionário removido com sucesso.")
 
-def conferir_cliente():
-    print("Conferir cliente")
+        # Opcional: tratar o caso onde nenhum registro foi deletado
+        if cursor.rowcount == 0:
+            messagebox.showinfo("Aviso", "Nenhum funcionário encontrado com este CPF.")
+
+
+def remover_produto(id_produto):
     conn = conectar_banco()
     if conn:
         cursor = conn.cursor()
-
-        cursor.execute("SELECT * FROM tabela_de_clientes")
-        clientes = cursor.fetchall()
-        for cliente in clientes:
-            print("CPF:", cliente[0])
-            print("Nome do Cliente:", cliente[1])
-            print("Telefone:", cliente[2])
-            print("Email:", cliente[3])
-            print("Data de Cadastro:", cliente[4])
-
+        cursor.execute("DELETE FROM produtos WHERE id_Produto = %s", (id_produto,))
+        conn.commit()  # Confirma a operação no banco de dados
         conn.close()
+        messagebox.showinfo("Sucesso", "Produto removido com sucesso.")
 
-def conferir_lote():
-    print("Conferir lote")
+        # Opcional: tratar o caso onde nenhum registro foi deletado
+        if cursor.rowcount == 0:
+            messagebox.showinfo("Aviso", "Nenhum produto encontrado com este ID.")
+
+def remover_lote_estoque(id_lote):
     conn = conectar_banco()
     if conn:
         cursor = conn.cursor()
-
-        cursor.execute("SELECT * FROM controle_de_estoque")
-        lotes = cursor.fetchall()
-        for lote in lotes:
-            print("ID do Lote:", lote[0])
-            print("CNPJ da Unidade:", lote[1])
-            print("ID do Produto:", lote[2])
-            print("Quantidade em Estoque:", lote[3])
-            print("Data de Validade:", lote[4])
-            print("Data de Atualização:", lote[5])
-
+        cursor.execute("DELETE FROM Controle_de_Estoque WHERE id_lote = %s", (id_lote,))
+        conn.commit()  # Confirma a operação no banco de dados
         conn.close()
+        messagebox.showinfo("Sucesso", "Lote de estoque removido com sucesso.")
+
+        # Opcional: tratar o caso onde nenhum registro foi deletado
+        if cursor.rowcount == 0:
+            messagebox.showinfo("Aviso", "Nenhum lote de estoque encontrado com este ID.")
+
+
+
+
+
+# def remover_produto():
+#     print("Remover produto")
+#     conn = conectar_banco()
+#     if conn:
+#         id_produto = input("Digite o id_produto do produto a ser removido:")
+#         cursor = conn.cursor()
+#         try:
+#             cursor.execute("DELETE FROM produtos WHERE id_produto = %s", (id_produto,))
+#             conn.commit()
+#             print("Produto removido com sucesso!")
+#         except psycopg2.Error as e:
+#             print("Erro ao remover produto:", e)
+#         finally:
+#             conn.close()
+
+# def remover_cliente():
+#     print("Remover cliente")
+#     conn = conectar_banco()
+#     if conn:
+#         cpf = input("Digite o cpf do cliente a ser removido:")
+#         cursor = conn.cursor()
+#         try:
+#             cursor.execute("DELETE FROM tabela_de_clientes WHERE cpf = %s", (cpf,))
+#             conn.commit()
+#             print("Cliente removido com sucesso!")
+#         except psycopg2.Error as e:
+#             print("Erro ao remover cliente:", e)
+#         finally:
+#             conn.close()
+
+# def remover_lote():
+#     print("Remover lote")
+#     conn = conectar_banco()
+#     if conn:
+#         id_lote = input("Digite o id_lote do lote a ser removido:")
+#         cursor = conn.cursor()
+#         try:
+#             cursor.execute("DELETE FROM controle_de_estoque WHERE id_lote = %s", (id_lote,))
+#             conn.commit()
+#             print("Lote removido com sucesso!")
+#         except psycopg2.Error as e:
+#             print("Erro ao remover lote:", e)
+#         finally:
+#             conn.close()
+
+# def remover_endereco():
+#     print("Remover endereço")
+#     conn = conectar_banco()
+#     if conn:
+#         id_endereco = input("Digite o id_endereco do endereco a ser removido:")
+#         cursor = conn.cursor()
+#         try:
+#             cursor.execute("DELETE FROM enderecos WHERE id_endereco = %s", (id_endereco,))
+#             conn.commit()
+#             print("Endereço removido com sucesso!")
+#         except psycopg2.Error as e:
+#             print("Erro ao remover endereço:", e)
+#         finally:
+#             conn.close()
