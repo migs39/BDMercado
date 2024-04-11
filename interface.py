@@ -1,21 +1,38 @@
 import funcs
 import tkinter as tk
 
+# Função para fechar o programa completamente
+def close_program():
+    root.destroy()
 
+# Função para abrir a janela de adicionar dados
 def open_adicionar_dados():
     root.withdraw()  # Oculta a janela atual
     adicionar_dados_window.deiconify()  # Exibe a nova janela
 
+# Função para fechar a janela de adicionar dados
 def close_adicionar_dados():
     adicionar_dados_window.withdraw()  # Oculta a janela de adicionar dados
     root.deiconify()  # Exibe a janela principal novamente
 
+# Função para abrir a janela de conferir dados
 def open_conferir_dados():
     root.withdraw()  # Oculta a janela atual
     conferir_dados_window.deiconify()  # Exibe a nova janela
 
+# Função para fechar a janela de conferir dados
 def close_conferir_dados():
     conferir_dados_window.withdraw()  # Oculta a janela de conferir dados
+    root.deiconify()  # Exibe a janela principal novamente
+
+# Função para abrir a janela de conferir dados
+def open_remover_dados():
+    root.withdraw()  # Oculta a janela atual
+    remover_dados_window.deiconify()  # Exibe a nova janela
+
+# Função para fechar a janela de conferir dados
+def close_remover_dados():
+    remover_dados_window.withdraw()  # Oculta a janela de conferir dados
     root.deiconify()  # Exibe a janela principal novamente
 
 # Função para aumentar o tamanho da fonte
@@ -31,7 +48,7 @@ root.geometry("800x640")  # Define o tamanho da janela principal
 # Nomes dos responsáveis
 responsaveis = ["Gabriel Pereira", "Gabriel Vilas", "Henrique Corazza", "Lucas Papoti", "Miguel Schwengber"]
 for nome in responsaveis:
-    tk.Label(root, text=nome, font=aumentar_fonte("Helvetica", 8), bg="white").pack(side = 'bottom', anchor ="sw", padx=10, pady=5)
+    tk.Label(root, text=nome, font=aumentar_fonte("Helvetica", 8), bg="white").pack(side='bottom', anchor="sw", padx=10, pady=5)
 
 # Título
 titulo = tk.Label(root, text="Banco de Dados Supermercados", font=aumentar_fonte("Helvetica", 20), bg="white")
@@ -42,6 +59,9 @@ btn_adicionar_dados = tk.Button(root, text="Adicionar Dados", font=aumentar_font
 btn_adicionar_dados.pack(pady=5)
 
 btn_conferir_dados = tk.Button(root, text="Conferir Dados", font=aumentar_fonte("Helvetica", 12), command=open_conferir_dados)
+btn_conferir_dados.pack(pady=5)
+
+btn_conferir_dados = tk.Button(root, text="Remover Dados", font=aumentar_fonte("Helvetica", 12), command=open_remover_dados)
 btn_conferir_dados.pack(pady=5)
 
 # Janela para adicionar dados
@@ -85,6 +105,7 @@ conferir_dados_window.configure(background='white')
 conferir_dados_window.withdraw()  # Mantém a janela oculta inicialmente
 conferir_dados_window.geometry("800x640")  # Define o tamanho da janela
 
+
 # Botão Voltar
 btn_voltar_conferir = tk.Button(conferir_dados_window, text="Voltar", font=aumentar_fonte("Helvetica", 12), command=close_conferir_dados)
 btn_voltar_conferir.pack(pady=10, padx=10, anchor='w')
@@ -111,5 +132,45 @@ btn_conferir_cliente.pack(pady=10)
 
 btn_conferir_lote = tk.Button(conferir_dados_window, text="Conferir Lote", font=aumentar_fonte("Helvetica", 12), command=funcs.conferir_lote)
 btn_conferir_lote.pack(pady=10)
+
+
+# Janela para remover dados
+remover_dados_window = tk.Toplevel(root)
+remover_dados_window.title("Remover Elementos")
+remover_dados_window.configure(background='white')
+remover_dados_window.withdraw()  # Mantém a janela oculta inicialmente
+remover_dados_window.geometry("800x640")  # Define o tamanho da janela
+
+
+# Botão Voltar
+btn_voltar_remover = tk.Button(remover_dados_window, text="Voltar", font=aumentar_fonte("Helvetica", 12), command=close_remover_dados)
+btn_voltar_remover.pack(pady=10, padx=10, anchor='w')
+
+# Título
+titulo_remover = tk.Label(remover_dados_window, text="Remover Tabelas", font=aumentar_fonte("Helvetica", 16), bg="white")
+titulo_remover.pack(pady=50)
+
+# Botões para remover
+btn_remover_fornecedor = tk.Button(remover_dados_window, text="Remover Fornecedor", font=aumentar_fonte("Helvetica", 12), command=funcs.remover_fornecedor)
+btn_remover_fornecedor.pack(pady=10)
+
+btn_remover_mercado = tk.Button(remover_dados_window, text="Remover Mercado", font=aumentar_fonte("Helvetica", 12), command=funcs.remover_mercado)
+btn_remover_mercado.pack(pady=10)
+
+btn_remover_pedido = tk.Button(remover_dados_window, text="Remover Pedido", font=aumentar_fonte("Helvetica", 12), command=funcs.remover_pedido)
+btn_remover_pedido.pack(pady=10)
+
+btn_remover_produto = tk.Button(remover_dados_window, text="Remover Produto", font=aumentar_fonte("Helvetica", 12), command=funcs.remover_produto)
+btn_remover_produto.pack(pady=10)
+
+btn_remover_cliente = tk.Button(remover_dados_window, text="Remover Cliente", font=aumentar_fonte("Helvetica", 12), command=funcs.remover_cliente)
+btn_remover_cliente.pack(pady=10)
+
+btn_remover_lote = tk.Button(remover_dados_window, text="Remover Lote", font=aumentar_fonte("Helvetica", 12), command=funcs.remover_lote)
+btn_remover_lote.pack(pady=10)
+
+
+# Configurar a ação de fechar todas as janelas quando a janela principal for fechada
+root.protocol("WM_DELETE_WINDOW", close_program)
 
 root.mainloop()
